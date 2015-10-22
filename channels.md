@@ -168,7 +168,7 @@ end
 #### Intercepting Outgoing Events
 We won't implement this for our application, but imagine our chat app allowed users to ignore messages about new users joining a room. We could implement that behavior like this where we explicitly tell Phoenix which outgoing event we want to intercept and then define a `handle_out/3` callback for those events. (Of course, this assumes that we have a `User` model with an `ignoring?/2` function, and that we pass a user in via the `assigns` map.)
 
-```
+```elixir
 intercept ["user_joined"]
 
 def handle_out("user_joined", msg, socket) do
@@ -187,7 +187,7 @@ That's all there is to our basic chat app. Fire up multiple browser tabs and you
 
 Similar to connection structs, `%Plug.Conn{}`, it is possible to assign values to a channel socket. `Phoenix.Socket.assign/3` is conveniently imported into a channel module as `assign/3`:
 
-```
+```elixir
 socket = assign(socket, :user, msg["user"])
 ```
 

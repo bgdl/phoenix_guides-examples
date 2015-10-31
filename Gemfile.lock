@@ -1,0 +1,29 @@
+PATH
+  remote: ~/opensource/guidedown
+  specs:
+    guidedown (0.1.0)
+      github-linguist (~> 4.7.0)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    charlock_holmes (0.7.3)
+    escape_utils (1.1.0)
+    github-linguist (4.7.0)
+      charlock_holmes (~> 0.7.3)
+      escape_utils (~> 1.1.0)
+      mime-types (>= 1.19)
+      rugged (>= 0.23.0b)
+    mime-types (2.6.2)
+    rake (10.4.2)
+    rugged (0.24.0b6)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  guidedown!
+  rake
+
+BUNDLED WITH
+   1.10.6

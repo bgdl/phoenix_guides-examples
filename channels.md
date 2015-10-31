@@ -19,6 +19,7 @@ defmodule HelloPhoenix.UserSocket do
   ## Channels
   channel "rooms:*", HelloPhoenix.RoomChannel
   ...
+end
 ```
 
 Now, whenever a client sends a message whose topic starts with `"rooms:"`, it will be routed to our RoomChannel. Next, we'll define a `HelloPhoenix.RoomChannel` module to manage our chat room messages.
@@ -68,14 +69,14 @@ Save the file and your browser should auto refresh, thanks to the Phoenix live r
 
 In `web/templates/page/index.html.eex`, we'll replace the existing code with a container to hold our chat messages, and an input field to send them:
 
-```
+```html+eex
 <div id="messages"></div>
 <input id="chat-input" type="text"></input>
 ```
 
 We'll also add jQuery to our application layout in `web/templates/layout/app.html.eex`:
 
-```
+```html+eex
       ...
 
       <%= @inner %>
@@ -198,4 +199,4 @@ To see an example of the application we just built, checkout this project (https
 
 You can also see a live demo at (http://phoenixchat.herokuapp.com/).
 
- 
+

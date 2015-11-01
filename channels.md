@@ -1,3 +1,63 @@
+# Channels
+
+Channels are a really exciting and powerful part of Phoenix that allow us to easily add soft-realtime features to our applications. Channels are based on a simple idea - sending and receiving messages. Senders broadcast messages about topics. Receivers subscribe to topics so that they can get those messages. Senders and receivers can switch roles on the same topic at any time.
+
+Since Elixir is based on message passing, you may wonder why we need this extra mechanism to send and receive messages. With Channels, neither senders nor receivers have to be Elixir processes. They can be anything that we can teach to communicate over a Channel - a JavaScript client, an iOS app, another Phoenix application, our watch. Also, messages broadcast over a Channel may have many receivers. Elixir processes communicate one to one.
+
+The word "Channel" is really shorthand for a layered system with a number of components. Let's take a quick look at them now so we can see the big picture a little better.
+
+#### The Moving Parts
+
+- Socket Handlers
+
+Phoenix holds a single connection to the server and multiplexes your channel sockets over that one connection. Socket handlers, such as `web/channels/user_socket.ex`, are modules that authenticate and identify a socket connection and allow you to set default socket assigns for use in all channels.
+
+- Channel Routes
+
+These are defined in Socket handlers, such as `web/channels/user_socket.ex`, which makes them distinct from other routes. They match on the topic string and dispatch matching requests to the given Channel module. The star character `*` acts as a wildcard matcher, so in the following example route, requests for `sample_topic:pizza` and `sample_topic:oranges` would both be dispatched to the `SampleTopicChannel`.
+
+```elixir
+channel "sample_topic:*", HelloPhoenix.SampleTopicChannel
+```
+
+- Channels
+
+Channels handle events from clients, so they are similar to Controllers, but there are two key differences. Channel events can go both directions - incoming and outgoing. Channel connections also persist beyond a single request/response cycle. Channels are the highest level abstraction for realtime communication components in Phoenix.
+
+Each Channel will implement one or more clauses of each of these four callback functions - `join/3`, `terminate/2`, `handle_in/3`, and `handle_out/3`.
+
+- PubSub
+
+The Phoenix PubSub layer consists of the `Phoenix.PubSub` module and a variety of modules for different adapters and their Genservers. These modules contain functions which are the nuts and bolts of organizing Channel communication - subscribing to topics, unsubscribing from topics, and broadcasting messages on a topic.
+
+We can also define our own PubSub adapters if we need to. Please see the [Phoenix.PubSub docs](http://hexdocs.pm/phoenix/Phoenix.PubSub.html) for more information.
+
+It is worth noting that these modules are intended for Phoenix's internal use. Channels use them under the hood to do much of their work. As end users, we shouldn't have any need to use them directly in our applications.
+
+- Messages
+
+The `Phoenix.Socket.Message` module defines a struct with the following keys which denotes a valid message. From the [Phoenix.Socket.Message docs](http://hexdocs.pm/phoenix/Phoenix.Socket.Message.html).
+  - `topic` - The String topic or topic:subtopic pair namespace, i.e. “messages”, “messages:123”
+  - `event` - The String event name, ie “join”
+  - `payload` - The String JSON message payload
+  - `ref` - The unique string used for replying to incoming events
+
+- Topics
+
+Topics are string identifiers - names that the various layers use in order to make sure messages end up in the right place. As we saw above, topics can use wildcards. This allows for a useful "topic:subtopic" convention. Often, you'll compose topics using record IDs from your model layer, such as `"users:123"`.
+
+- Transports
+
+The transport layer is where the rubber meets the road. The `Phoenix.Channel.Transport` module handles all the message dispatching into and out of a Channel.
+
+- Transport Adapters
+
+The default transport mechanism is via WebSockets which will fall back to LongPolling if WebSockets are not available. Other transport adapters are possible, and we can write our own if we follow the adapter contract. Please see `Phoenix.Transports.WebSocket` for an example.
+
+- Client Libraries
+
+Phoenix currently ships with its own JavaScript client. iOS and Android clients have been released with Phoenix 1.0.
+
 ## Tying it all together
 Let's tie all these ideas together by building a simple chat application. After [generating a new Phoenix application](http://www.phoenixframework.org/docs/up-and-running) we'll see that the endpoint is already set up for us in `lib/hello_phoenix/endpoint.ex`:
 

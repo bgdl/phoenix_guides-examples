@@ -1,8 +1,10 @@
 require 'guidedown'
 
 task :generate do
-  %w(channels).each do |guide|
-    Dir.chdir guide
+  %w(templates channels).each do |guide|
+    path = File.expand_path(File.dirname(__FILE__) + '/' + guide)
+    $stderr.puts "Switching to #{path}"
+    Dir.chdir path
 
     hashes = `git log --pretty=format:%H --reverse`.split
 

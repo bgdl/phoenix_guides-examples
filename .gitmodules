@@ -1,3 +1,6 @@
 [submodule "channels"]
 	path = channels
 	url = git@github.com:jeffkreeftmeijer/phoenix_channels_example.git
+[submodule "templates"]
+	path = templates
+	url = git@github.com:jeffkreeftmeijer/phoenix_guides-templates-example.git

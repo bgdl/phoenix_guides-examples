@@ -198,5 +198,3 @@ Sockets store assigned values as a map in `socket.assigns`.
 To see an example of the application we just built, checkout this project (https://github.com/chrismccord/phoenix_chat_example).
 
 You can also see a live demo at (http://phoenixchat.herokuapp.com/).
-
-

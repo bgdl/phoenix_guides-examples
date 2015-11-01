@@ -22,8 +22,8 @@ task :generate do
 
     `git checkout #{initial_branch}`
 
-    File.open("#{guide}.md", 'w') do |file|
-      file.write output
+    File.open("../#{guide}.md", 'w') do |file|
+      file.write output.gsub(/\s+\z/, "\n")
     end
   end
 end

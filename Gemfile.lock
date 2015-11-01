@@ -1,5 +1,6 @@
-PATH
-  remote: ~/opensource/guidedown
+GIT
+  remote: https://github.com/jeffkreeftmeijer/guidedown.git
+  revision: 704e4eb365767bbf37024277fe8ed536dae75116
   specs:
     guidedown (0.1.0)
       github-linguist (~> 4.7.0)

@@ -1,4 +1,4 @@
 source 'https://rubygems.org'
 
 gem 'rake'
-gem 'guidedown'
+gem 'guidedown', git: "https://github.com/jeffkreeftmeijer/guidedown.git"

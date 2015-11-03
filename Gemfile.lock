@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/jeffkreeftmeijer/guidedown.git
-  revision: 704e4eb365767bbf37024277fe8ed536dae75116
+  revision: 8473e64c42095d75525b4cfbb563f564df2d78fd
   specs:
     guidedown (0.1.0)
       github-linguist (~> 4.7.0)
@@ -17,7 +17,7 @@ GEM
       rugged (>= 0.23.0b)
     mime-types (2.6.2)
     rake (10.4.2)
-    rugged (0.24.0b6)
+    rugged (0.24.0b8)
 
 PLATFORMS
   ruby

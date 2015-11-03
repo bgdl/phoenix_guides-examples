@@ -4,7 +4,7 @@ task :generate do
   %w(templates).each do |guide|
     Dir.chdir(guide)
 
-    File.open("../output/#{guide}2.md", 'w') do |file|
+    File.open("../output/#{guide}.md", 'w') do |file|
       file.write Guidedown.new(
         File.read("../#{guide}.md"),
         no_filenames: true,

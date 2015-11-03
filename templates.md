@@ -18,79 +18,74 @@ Let's make some additions to our application so we can experiment a little.
 
 First, let's define a new route in `web/router.ex`.
 
-```elixir
-defmodule HelloPhoenix.Router do
-  ...
+    # web/router.ex @ 551d7f
+    defmodule HelloPhoenix.Router do
+      ...
 
-  scope "/", HelloPhoenix do
-    pipe_through :browser # Use the default browser stack
+      scope "/", HelloPhoenix do
+        pipe_through :browser # Use the default browser stack
 
-    get "/", PageController, :index
-    get "/test", PageController, :test
-  end
+        get "/", PageController, :index
+        get "/test", PageController, :test
+      end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", HelloPhoenix do
-  #   pipe_through :api
-  # end
-end
-```
+      # Other scopes may use custom stacks.
+      # scope "/api", HelloPhoenix do
+      #   pipe_through :api
+      # end
+    end
 
 Now, let's define the controller action we specified in the route. We'll add a `test/2` action in the `web/controllers/page_controller.ex` file.
 
-```elixir
-defmodule HelloPhoenix.PageController do
-  ...
+    # web/controllers/page_controller.ex @ 569788
+    defmodule HelloPhoenix.PageController do
+      ...
 
-  def test(conn, _params) do
-    render conn, "test.html"
-  end
-end
-```
+      def test(conn, _params) do
+        render conn, "test.html"
+      end
+    end
 
 We're going to create a function that tells us which controller and action are handling our request.
 
 To do that, we need to import the `action_name/1` and `controller_module/1` functions from `Phoenix.Controller` in `web/web.ex`.
 
-```elixir
-  def view do
-    quote do
-      use Phoenix.View, root: "web/templates"
+    # web/web.ex:40-53 @ 09a2d5
+      def view do
+        quote do
+          use Phoenix.View, root: "web/templates"
 
-      # Import convenience functions from controllers
-      import Phoenix.Controller, only: [get_csrf_token: 0, get_flash: 2, view_module: 1,
-                                        action_name: 1, controller_module: 1]
+          # Import convenience functions from controllers
+          import Phoenix.Controller, only: [get_csrf_token: 0, get_flash: 2, view_module: 1,
+                                            action_name: 1, controller_module: 1]
 
-      ...
-    end
-  end
-```
+          ...
+        end
+      end
 
 Next, let's define a `handler_info/1` function at the bottom of the `web/views/page_view.ex` which makes use of the `controller_module/1` and `action_name/1` functions we just imported. We'll also define a `connection_keys/1` function that we'll use in a moment.
 
-```elixir
-defmodule HelloPhoenix.PageView do
-  use HelloPhoenix.Web, :view
+    # web/views/page_view.ex @ f281e7
+    defmodule HelloPhoenix.PageView do
+      use HelloPhoenix.Web, :view
 
-    def handler_info(conn) do
-    "Request Handled By: #{controller_module conn}.#{action_name conn}"
-  end
+        def handler_info(conn) do
+        "Request Handled By: #{controller_module conn}.#{action_name conn}"
+      end
 
-  def connection_keys(conn) do
-    conn
-    |> Map.from_struct()
-    |> Map.keys()
-  end
-end
-```
+      def connection_keys(conn) do
+        conn
+        |> Map.from_struct()
+        |> Map.keys()
+      end
+    end
 
 We have a route. We created a new controller action. We have made modifications to the main application view. Now all we need is a new template to display the string we get from `handler_info/1`. Let's create a new one at `web/templates/page/test.html.eex`.
 
-```html+eex
-<div class="jumbotron">
-  <p><%= handler_info @conn %></p>
-</div>
-```
+    # web/templates/page/test.html.eex @ c03a27
+    <div class="jumbotron">
+      <p><%= handler_info @conn %></p>
+    </div>
 
 Notice that `@conn` is available to us in the template for free via the `assigns` map.
 
@@ -108,17 +103,16 @@ Now that we have a function, visible to our template, that returns a list of key
 
 We can add a header and a list comprehension like this.
 
-```html+eex
-<div class="jumbotron">
-  <p><%= handler_info @conn %></p>
+    # web/templates/page/test.html.eex @ f92422
+    <div class="jumbotron">
+      <p><%= handler_info @conn %></p>
 
-  <h3>Keys for the conn Struct</h3>
+      <h3>Keys for the conn Struct</h3>
 
-  <%= for key <- connection_keys @conn do %>
-    <p><%= key %></p>
-  <% end %>
-</div>
-```
+      <%= for key <- connection_keys @conn do %>
+        <p><%= key %></p>
+      <% end %>
+    </div>
 
 We use the list of keys returned by the `connection_keys` function as the source list to iterate over. Note that we need the `=` in both `<%=` - one for the top line of the list comprehension and the other to display the key. Without them, nothing would actually be displayed.
 
@@ -137,25 +131,17 @@ The simple solution is to use another template! Templates are just function call
 
 Let's turn this display snippet into its own template. Let's create a new template file at `web/templates/page/key.html.eex`, like this.
 
-```html+eex
-<p><%= @key %></p>
-```
+    # web/templates/page/key.html.eex @ 85f25c
+    <p><%= @key %></p>
 
 We need to change `key` to `@key` here because this is a new template, not part of a list comprehension. The way we pass data into a template is by the `assigns` map, and the way we get the values out of the `assigns` map is by referencing the keys with a preceding `@`.
 
 Now that we have a template, we simply render it within our list comprehension in the `test.html.eex` template.
 
-```html+eex
-<div class="jumbotron">
-  <p><%= handler_info @conn %></p>
-
-  <h3>Keys for the conn Struct</h3>
-
-  <%= for key <- connection_keys @conn do %>
-    <%= render "key.html", key: key %>
-  <% end %>
-</div>
-```
+    # web/templates/page/test.html.eex @ af3b35
+    <%= for key <- connection_keys @conn do %>
+      <%= render "key.html", key: key %>
+    <% end %>
 
 Let's take a look at [localhost:4000/test](http://localhost:4000/test) again. The page should look exactly as it did before.
 
@@ -167,29 +153,27 @@ Let's move our template into a shared view.
 
 `key.html.eex` is currently rendered by the `HelloPhoenix.PageView` module, but we use a render call which assumes that the current view model is what we want to render with. We could make that explicit, and re-write it like this:
 
-```html+eex
-<div class="jumbotron">
-  ...
+    # web/templates/page/test.html.eex @ ec365d
+    <div class="jumbotron">
+      ...
 
-  <%= for key <- connection_keys @conn do %>
-    <%= render HelloPhoenix.PageView, "key.html", key: key %>
-  <% end %>
-</div>
-```
+      <%= for key <- connection_keys @conn do %>
+        <%= render HelloPhoenix.PageView, "key.html", key: key %>
+      <% end %>
+    </div>
 
 Since we want this to live in a new `web/templates/shared` directory, we need a new individual view to render templates in that directory, `web/views/shared_view.ex`.
 
-```elixir
-defmodule HelloPhoenix.SharedView do
-  use HelloPhoenix.Web, :view
-end
-```
+    # web/views/shared_view.ex @ f17ce3
+    defmodule HelloPhoenix.SharedView do
+      use HelloPhoenix.Web, :view
+    end
 
 Now we can move `key.html.eex` from the `web/templates/page` directory into the `web/templates/shared` directory. Once that happens, we can change the render call to use the new `HelloPhoenix.SharedView`.
 
-```elixir
-<%= for key <- connection_keys @conn do %>
-  <%= render HelloPhoenix.SharedView, "key.html", key: key %>
-<% end %>
-```
+    # web/templates/page/test.html.eex:6-8 @ b24468
+      <%= for key <- connection_keys @conn do %>
+        <%= render HelloPhoenix.SharedView, "key.html", key: key %>
+      <% end %>
+
 Going back to [localhost:4000/test](http://localhost:4000/test) again. The page should look exactly as it did before.

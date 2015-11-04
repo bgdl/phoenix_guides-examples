@@ -169,7 +169,7 @@ Since we want this to live in a new `web/templates/shared` directory, we need a 
       use HelloPhoenix.Web, :view
     end
 
-Now we can move `key.html.eex` from the `web/templates/page` directory into the `web/templates/shared` directory. Once that happens, we can change the render call to use the new `HelloPhoenix.SharedView`.
+Now we can move `key.html.eex` from the `web/templates/page` directory into the `web/templates/shared` directory. Once that happens, we can change the render call in `web/templates/page/test.html.eex` to use the new `HelloPhoenix.SharedView`.
 
     # web/templates/page/test.html.eex:6-8 @ b24468
       <%= for key <- connection_keys @conn do %>

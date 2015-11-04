@@ -28,7 +28,7 @@ Each Channel will implement one or more clauses of each of these four callback f
 
 - PubSub
 
-The Phoenix PubSub layer consists of the `Phoenix.PubSub` module and a variety of modules for different adapters and their Genservers. These modules contain functions which are the nuts and bolts of organizing Channel communication - subscribing to topics, unsubscribing from topics, and broadcasting messages on a topic.
+The Phoenix PubSub layer consists of the `Phoenix.PubSub` module and a variety of modules for different adapters and their `GenServer`s. These modules contain functions which are the nuts and bolts of organizing Channel communication - subscribing to topics, unsubscribing from topics, and broadcasting messages on a topic.
 
 We can also define our own PubSub adapters if we need to. Please see the [Phoenix.PubSub docs](http://hexdocs.pm/phoenix/Phoenix.PubSub.html) for more information.
 
@@ -56,7 +56,7 @@ The default transport mechanism is via WebSockets which will fall back to LongPo
 
 - Client Libraries
 
-Phoenix currently ships with its own JavaScript client. iOS and Android clients have been released with Phoenix 1.0.
+Phoenix currently ships with its own JavaScript client. [iOS](https://github.com/davidstump/SwiftPhoenixClient), [Android](https://github.com/eoinsha/JavaPhoenixChannels), and [C#](https://github.com/livehelpnow/CSharpPhoenixClient) clients have been released with Phoenix 1.0.
 
 ## Tying it all together
 Let's tie all these ideas together by building a simple chat application. After [generating a new Phoenix application](http://www.phoenixframework.org/docs/up-and-running) we'll see that the endpoint is already set up for us in `lib/hello_phoenix/endpoint.ex`:

@@ -1,8 +1,9 @@
 require 'guidedown'
 
 task :generate do
-  %w(templates).each do |guide|
-    Dir.chdir(guide)
+  %w(channels templates).each do |guide|
+    path = File.expand_path(File.join(File.dirname(__FILE__), guide))
+    Dir.chdir(path)
 
     File.open("../output/#{guide}.md", 'w') do |file|
       file.write Guidedown.new(

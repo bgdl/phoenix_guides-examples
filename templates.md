@@ -175,5 +175,4 @@ Now we can move `key.html.eex` from the `web/templates/page` directory into the 
       <%= for key <- connection_keys @conn do %>
         <%= render HelloPhoenix.SharedView, "key.html", key: key %>
       <% end %>
-
 Going back to [localhost:4000/test](http://localhost:4000/test) again. The page should look exactly as it did before.
